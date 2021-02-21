@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdleState : IPlayerState
+public class PlayerWeaponActionState : IPlayerState
 {
     // コンストラクタ
-    public PlayerIdleState(PlayerStateController controller) 
+    public PlayerWeaponActionState(PlayerStateController controller)
     {
         stateController = controller;
     }
@@ -17,21 +17,16 @@ public class PlayerIdleState : IPlayerState
     public void SceneStart()
     {
     }
-    
+
     // ステート遷移時の初期化処理
     public void Initialize()
     {
+
     }
 
     // ステートの実行処理
     public void Execute()
     {
-        // 移動ステートへ遷移
-        if (Input.GetButtonDown("Horizontal"))
-            stateController.ChangeActiveState(PlayerStateController.PlayerStateEnum.Move);
-        else
-        if (Input.GetButtonDown("Vertical"))
-            stateController.ChangeActiveState(PlayerStateController.PlayerStateEnum.Move);
     }
 
     // ステートを抜ける処理

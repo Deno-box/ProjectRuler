@@ -31,8 +31,20 @@ public class PlayerStateController : MonoBehaviour
 
     void Start()
     {
+        // ステートを作成、登録
         CreateState();
+
+        // ステートを初期化
+        for (PlayerStateEnum i = 0; i < PlayerStateEnum.None; i++)
+            stateDic[i].SceneStart();
+
+        // 初期ステートを設定
         activeState = stateDic[PlayerStateEnum.Idle];
+
+        // アクティブステートを初期化
+        activeState.Initialize();
+
+
         lastState = activeState;
     }
 
@@ -40,18 +52,28 @@ public class PlayerStateController : MonoBehaviour
     {
         // アクティブなステートを実行
         activeState.Execute();
+
         lastState = activeState;
     }
 
     // ステートを変更
     public void ChangeActiveState(PlayerStateEnum state)
     {
-
+        activeState.Exit();
+        activeState = stateDic[state];
+        activeState.Initialize();
     }
 
-
+    // 各ステートを作成、ステートディクショナリーに登録
     private void CreateState()
     {
-        stateDic.Add(PlayerStateEnum.Idle, new PlayerIdleState());
+        stateDic.Add(PlayerStateEnum.Idle,          new PlayerIdleState(this));
+        stateDic.Add(PlayerStateEnum.Move,          new PlayerMoveState(this));
+        stateDic.Add(PlayerStateEnum.Avoidance,     new PlayerAvoidanceState(this));
+        stateDic.Add(PlayerStateEnum.ReceiveDamage, new PlayerReceiveDamageState(this));
+        stateDic.Add(PlayerStateEnum.Jump,          new PlayerJumpState(this));
+        stateDic.Add(PlayerStateEnum.Hack,          new PlayerHackState(this));
+        stateDic.Add(PlayerStateEnum.Robbery,       new PlayerRobberyState(this));
+        stateDic.Add(PlayerStateEnum.WeaoponAction, new PlayerWeaponActionState(this));
     }
 }
