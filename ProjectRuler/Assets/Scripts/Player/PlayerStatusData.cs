@@ -7,6 +7,10 @@ public class PlayerStatusData : ScriptableObject
 {
     // 移動加速度
     public float moveSpeed;
-    // 移動最大速度
-    public float moveSpeedMax;
+    // ダッシュ時の速度
+    public float dashSpeed;
+    // 移動時の摩擦係数
+    public float friction;
+    // 方向転換時の回転速度
+    public float rotSpeed;
 }

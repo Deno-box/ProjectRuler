@@ -15,6 +15,7 @@ public class PlayerStateController : MonoBehaviour
         Hack,           // ハッキング
         Robbery,        // 強奪
         WeaoponAction,  // 装備のアクション
+        Dash,           // ダッシュ
         None            // なし
     }
 
@@ -75,5 +76,6 @@ public class PlayerStateController : MonoBehaviour
         stateDic.Add(PlayerStateEnum.Hack,          new PlayerHackState(this));
         stateDic.Add(PlayerStateEnum.Robbery,       new PlayerRobberyState(this));
         stateDic.Add(PlayerStateEnum.WeaoponAction, new PlayerWeaponActionState(this));
+        stateDic.Add(PlayerStateEnum.Dash,          new PlayerDashState(this));
     }
 }

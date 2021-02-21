@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMoveState : IPlayerState
+public class PlayerDashState : IPlayerState
 {
     // ステートコントローラー
     private PlayerStateController stateController;
     // プレイヤーのステータスデータ
     private PlayerStatusData statusData;
-    // プレイヤーのアニメメーター
+    // プレイヤーのアニメーター
     private Animator aimator;
     // プレイヤーのゲームオブジェクト
     private GameObject player;
@@ -19,9 +19,11 @@ public class PlayerMoveState : IPlayerState
     // メインカメラ
     private Camera camera;
 
+    // ダッシュボタンが押されたか
+    private bool isPushDashButton = false;
 
     // コンストラクタ
-    public PlayerMoveState(PlayerStateController controller)
+    public PlayerDashState(PlayerStateController controller)
     {
         stateController = controller;
     }
@@ -41,7 +43,7 @@ public class PlayerMoveState : IPlayerState
     // ステート遷移時の初期化処理
     public void Initialize()
     {
-        
+
     }
 
     // ステートの実行処理
@@ -50,11 +52,8 @@ public class PlayerMoveState : IPlayerState
         Move();
         Rotate();
 
-        // ダッシュボタンを押したらダッシュ移動へ
         if (Input.GetButtonDown("Dash"))
-            stateController.ChangeActiveState(PlayerStateController.PlayerStateEnum.Dash);
-
-        AnimParameterSet();
+            stateController.ChangeActiveState(PlayerStateController.PlayerStateEnum.Move);
     }
 
     // ステートを抜ける処理
@@ -69,27 +68,19 @@ public class PlayerMoveState : IPlayerState
         moveVec = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
         if (moveVec.magnitude > 0)
         {
-            moveVec *= statusData.moveSpeed * statusData.friction;// * Time.deltaTime;
+            moveVec *= statusData.dashSpeed * statusData.friction;// * Time.deltaTime;
             rb.velocity = camera.GetComponent<PlayerDefaultCamera>().HrizontalRotation * moveVec;
         }
+
+        aimator.SetFloat("MoveVel", moveVec.magnitude);
     }
 
     // 方向転換処理
     private void Rotate()
     {
         if (moveVec.magnitude > 0)
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, 
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation,
             Quaternion.LookRotation(camera.GetComponent<PlayerDefaultCamera>().HrizontalRotation * moveVec),
             statusData.rotSpeed);
-    }
-
-    // アニメーションのパラメーターを設定
-    private void AnimParameterSet()
-    {
-        // TODO : 検討中 移動方向に応じてアニメーションを変更
-        Vector3 cameraVec = camera.GetComponent<PlayerDefaultCamera>().HrizontalRotation * Vector3.forward;
-        float angle = Vector3.Angle(moveVec, cameraVec);
-        aimator.SetFloat("MoveDir", angle);
-        aimator.SetFloat("MoveVel", moveVec.magnitude);
     }
 }
